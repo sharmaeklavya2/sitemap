@@ -51,6 +51,10 @@ def format_date(date):
     return date.strftime("%Y-%m-%dT%H:%M:%S") + tz
 
 
+def is_external_url(url):
+    return url.startswith('http:') or url.startswith('https:')
+
+
 class SitemapGenerator(object):
     def __init__(self, context, settings, path, theme, output_path, *null):
 
@@ -276,7 +280,8 @@ class SitemapGenerator(object):
                 self.write_url(fake, fd)
 
             for page in pages:
-                self.write_url(page, fd)
+                if not is_external_url(page.url):
+                    self.write_url(page, fd)
 
             if self.format == "xml":
                 fd.write(XML_FOOTER)
